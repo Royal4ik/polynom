@@ -7,6 +7,8 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+// TODO: Нэймспейс должен соответствовать имени проекта
+// TODO: Удалить нахрен все атрибуты. Все, что ты для стайлкопа наставил.
 namespace Polinoms
 {
     using System;
@@ -68,7 +70,7 @@ namespace Polinoms
                             {
                                 arguments[i] = Convert.ToDouble(Console.ReadLine());
                             }
-
+                            
                             Console.WriteLine();
                             Console.WriteLine("Получившиеся значения");
                             var values = polynom.Calculate(arguments);
