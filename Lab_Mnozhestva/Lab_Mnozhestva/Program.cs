@@ -1,25 +1,14 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Program.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   Defines the Worker type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-// TODO: Нэймспейс должен соответствовать имени проекта
+﻿// TODO: Нэймспейс должен соответствовать имени проекта
 // TODO: Удалить нахрен все атрибуты. Все, что ты для стайлкопа наставил.
-namespace Polinoms
+namespace Lab_Mnozhestva
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
 
     using Polinom_Library;
 
-    [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1202:ElementsMustBeOrderedByAccess", Justification = "Reviewed. Suppression is OK here."),SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1202:ElementsMustBeOrderedByAccess", Justification = "Reviewed. Suppression is OK here."),SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed. Suppression is OK here.")]
     public class Program
     {
-        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:ElementMustBeginWithUpperCaseLetter", Justification = "Reviewed. Suppression is OK here.")]
         public static Polynom InputPolynom()
         {
             Console.WriteLine("Введите cтепень полинома");
@@ -32,7 +21,7 @@ namespace Polinoms
                 array1[i] = koef;
             }
 
-            return new Polynom(deg, array1);
+            return new Polynom(array1);
         }
 
         public static void Main(string[] args)
@@ -70,7 +59,7 @@ namespace Polinoms
                             {
                                 arguments[i] = Convert.ToDouble(Console.ReadLine());
                             }
-                            
+
                             Console.WriteLine();
                             Console.WriteLine("Получившиеся значения");
                             var values = polynom.Calculate(arguments);
@@ -90,7 +79,7 @@ namespace Polinoms
                             var polynom2 = InputPolynom();
                             Console.WriteLine("Сумма введенных полином равна:");
                             var result = polynom1 + polynom2;
-                            result.PrintPol();
+                            Console.WriteLine(result.ToString());
                             break;
                         }
 
@@ -102,7 +91,7 @@ namespace Polinoms
                             var polynom2 = InputPolynom();
                             Console.WriteLine("Разность введенных полином равна:");
                             var result = polynom1 - polynom2;
-                            result.PrintPol();
+                            Console.WriteLine(result.ToString());
                             break;               
                         }
 
@@ -114,7 +103,7 @@ namespace Polinoms
                             var multiplier = Convert.ToDouble(Console.ReadLine());
                             Console.WriteLine("Умножение числа на полином равно:");
                             var result = polynom * multiplier;
-                            result.PrintPol();
+                            Console.WriteLine(result.ToString());
                             break;
                         }
 
@@ -126,7 +115,7 @@ namespace Polinoms
                             var polynom2 = InputPolynom();
                             Console.WriteLine("Произведение введенных полиномов равно:");
                             var result = polynom1 * polynom2;
-                            result.PrintPol();
+                            Console.WriteLine(result.ToString());
                             break;
                         }
 

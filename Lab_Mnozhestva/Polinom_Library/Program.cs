@@ -1,17 +1,9 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Program.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   Defines the IFindroot type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Polinom_Library
+﻿namespace Polinom_Library
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq.Expressions;
 
     // TODO: Каждый отдельый класс и интерфейс выносится в одноименный файл. 
     // TODO: Один файл - одна сущность. В проекте с библиотеками класс Program равно как и файл Program обычно отсутствует
@@ -29,33 +21,32 @@ namespace Polinom_Library
         }
     }
 
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed. Suppression is OK here.")]
     public class Polynom : IFindroot
     {
-        private readonly int degree;
         private readonly List<double> polinom = new List<double>();
 
         // TODO: Зачем передавать степень, если она на прямую зависит от набора коэффициентов. Лучше сделать её свойством и вычислять диамически.
-        public Polynom(int degree, IList<double> array)
+        public Polynom(IEnumerable<double> array)
         {
-            this.degree = degree;
-            for (var i = 0; i < degree + 1; i++)
+            foreach (var t in array)
             {
-                this.polinom.Add(array[i]);
+                this.polinom.Add(t);
             }
         }
 
-        [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1202:ElementsMustBeOrderedByAccess",
-            Justification = "Reviewed. Suppression is OK here.")]
-        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1303:ConstFieldNamesMustBeginWithUpperCaseLetter", Justification = "Reviewed. Suppression is OK here.")]
+        private int Degree
+        {
+            get { return this.polinom.Count; }
+        }
+
         public double FindRoot(double start, double end)
         {
             const double Eps = 0.000001;
-            var fstart = this.Calc(start);
+            var fstart = this.Calculate(start);
             while (Math.Abs(start - end) > Eps)
             {
                 var center = (start + end) / 2;
-                var fcenter = this.Calc(center);
+                var fcenter = this.Calculate(center);
                 if (fstart * fcenter <= 0)
                 {
                     end = center;
@@ -72,25 +63,40 @@ namespace Polinom_Library
 
         // TODO: Так как мы обращаемся к этому методу в контексте многочлена, то есть (polynom.PrintPol()),
         // TODO: то логичнее назвать его просто Print, или даже как вариант, перегрузить метод ToString()
-        public void PrintPol()
+        // исправил
+        public override string ToString()
         {
-            for (var i = this.degree; i > 0; i--)
+            var line = " ";
+            var sign = '+';
+            for (var i = this.Degree - 1; i > 0; i--)
             {
-                var sign = '+';
                 var per = this.polinom[i];
                 if (per < 0)
                 {
                     per = -per;
 
                     // TODO: это зачем вообще? У тебя знак всегда равен плюс. Убрать.
-                    sign = (char)43;
+                    // так то нет, знак может быть минус
+                    sign = (char)45;
                 }
 
                 // TODO: Убрать использование методов консоли. Полином не должен от нее зависеть. Переписать, чтобы этот метод возвращал строку
-                Console.Write(per + "*x^" + i + " " + sign + " ");
+                // исправил
+                if (i == this.Degree - 1)
+                {
+                    sign = ' ';
+                }
+                line += sign + " " + per + "*x^" + i + " ";
+                sign = '+';
             }
 
-            Console.WriteLine(this.polinom[0]);
+            if (this.polinom[0] < 0)
+            {
+                sign = (char)45;
+            }
+
+            line += sign + " " + Math.Abs(this.polinom[0]);
+            return line;
         }
         
         public double[] Calculate(double[] array)
@@ -99,42 +105,44 @@ namespace Polinom_Library
             
             for (var i = 0; i < array.Length; i++)
             {
-                values[i] = 0; // TODO: зачем?
-                values[i] = this.Calc(array[i]);
+                 // TODO: зачем?
+                // исправил
+                values[i] = this.Calculate(array[i]);
             }
 
             return values;
         }
 
         // TODO: Вместо использования корявых имен (чего вообще делать нельзя), логичнее использовать перегрузку метода Calculate для одиночного значения параметра.
-        private double Calc(double value)
+        // исправил
+        private double Calculate(double value)
         {
             var results = 0.0;
+
             // TODO: Если требуется индекс элемента, лучше использовать for, а не foreach (это единственный случай, когда метод for лучше)
-            var j = 0;
-            foreach (var koef in this.polinom)
+            // исправил
+            for (var i = 0; i < this.Degree; i++)
             {
-                results += koef * Math.Pow(value, j);
-                j++;
+                results += this.polinom[i] * Math.Pow(value, i);
             }
 
             return results;
         }
-
-        [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1204:StaticElementsMustAppearBeforeInstanceElements", Justification = "Reviewed. Suppression is OK here."),SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1204:StaticElementsMustAppearBeforeInstanceElements", Justification = "Reviewed. Suppression is OK here."),SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1204:StaticElementsMustAppearBeforeInstanceElements", Justification = "Reviewed. Suppression is OK here."),SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1204:StaticElementsMustAppearBeforeInstanceElements", Justification = "Reviewed. Suppression is OK here.")]
+      
         public static Polynom operator +(Polynom first, Polynom second)
         {
             // TODO: Мы придерживаемся "верблюжьей" конвенции именования. maxDegree. Новое слово - большая буква
-            var maxdegree = first.degree >= second.degree ? first.degree : second.degree;
+            // исправил
+            var maxDegree = first.Degree >= second.Degree ? first.Degree : second.Degree;
             
-            var sum = new double[maxdegree + 1];
-            for (var i = 0; i <= maxdegree; i++)
+            var sum = new double[maxDegree];
+            for (var i = 0; i < maxDegree; i++)
             {
-                if (i > first.degree)
+                if (i >= first.Degree)
                 {
                     sum[i] = second.polinom[i];
                 }
-                else if (i > second.degree)
+                else if (i >= second.Degree)
                 {
                     sum[i] = first.polinom[i];
                 }
@@ -144,7 +152,7 @@ namespace Polinom_Library
                 }
             }
 
-            var summ = new Polynom(maxdegree, sum);
+            var summ = new Polynom(sum);
             return summ;
         }
 
@@ -155,39 +163,39 @@ namespace Polinom_Library
                 throw new ArgumentNullException("first");
             }
 
-            int maxdegree;
-            if (first.degree > second.degree)
+            var maxDegree = 0;
+            if (first.Degree > second.Degree)
             {
-                maxdegree = first.degree;
+                maxDegree = first.Degree;
             }
-            else if (first.degree < second.degree)
+            else if (first.Degree < second.Degree)
             {
-                maxdegree = second.degree;
+                maxDegree = second.Degree;
             }
             else
             {
-                maxdegree = first.degree;
-                while (Math.Abs(first.polinom[maxdegree] - second.polinom[maxdegree]) < 0.00001)
+                maxDegree = first.Degree;
+                while (Math.Abs(first.polinom[maxDegree] - second.polinom[maxDegree]) < 0.00001)
                 {
-                    maxdegree--;
-                    if (maxdegree >= 0)
+                    maxDegree--;
+                    if (maxDegree >= 0)
                     {
                         continue;
                     }
 
-                    maxdegree = 0;
+                    maxDegree = 0;
                     break;
                 }
             }
 
-            var diff = new double[maxdegree + 1];
-            for (var i = 0; i <= maxdegree; i++)
+            var diff = new double[maxDegree];
+            for (var i = 0; i < maxDegree; i++)
             {
-                if (i > first.degree)
+                if (i >= first.Degree)
                 {
                     diff[i] = -second.polinom[i];
                 }
-                else if (i > second.degree)
+                else if (i >= second.Degree)
                 {
                     diff[i] = first.polinom[i];
                 }
@@ -197,40 +205,42 @@ namespace Polinom_Library
                 }
             }
 
-            var difference = new Polynom(maxdegree, diff);
+            var difference = new Polynom(diff);
             return difference;
         }
 
         public static Polynom operator *(Polynom first, double multiplier)
         {
             // TODO: почему difference?
-            var diff = new double[first.degree + 1];
+            // исправил
+            var multiplicand = new double[first.Degree];
+
             // TODO: Вместо цикла for  логичнее использовать foreach
-            for (var i = 0; i < first.degree + 1; i++)
+            // для multiplicand отдельно считать индеск считать?
+            for (var i = 0; i < first.Degree; i++)
             {
-                diff[i] = multiplier * first.polinom[i];
+                multiplicand[i] = multiplier * first.polinom[i];
             }
 
-            var difference = new Polynom(first.degree, diff);
-            return difference;
+            var multiply = new Polynom(multiplicand);
+            return multiply;
         }
-
 
 
         public static Polynom operator *(Polynom first, Polynom second)
         {
-            var maxdegree = first.degree + second.degree;
-            var compostion = new double[maxdegree + 1];
+            var maxDegree = first.Degree + second.Degree;
+            var compostion = new double[maxDegree - 1];
 
-            for (var i = 0; i < first.degree + 1; i++)
+            for (var i = 0; i < first.Degree; i++)
             {
-                for (var j = 0; j < second.degree + 1; j++)
+                for (var j = 0; j < second.Degree; j++)
                 {
                     compostion[j + i] += first.polinom[i] * second.polinom[j];
                 }
             }
 
-            var result1 = new Polynom(maxdegree, compostion);
+            var result1 = new Polynom(compostion);
             return result1;
         }
     }

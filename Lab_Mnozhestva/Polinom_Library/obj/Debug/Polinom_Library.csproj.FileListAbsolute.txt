@@ -4,3 +4,9 @@ D:\Lab_Mnozhestva\Polinom_Library\bin\Debug\Polinom_Library.pdb
 D:\Lab_Mnozhestva\Polinom_Library\obj\Debug\Polinom_Library.csprojResolveAssemblyReference.cache
 D:\Lab_Mnozhestva\Polinom_Library\obj\Debug\Polinom_Library.dll
 D:\Lab_Mnozhestva\Polinom_Library\obj\Debug\Polinom_Library.pdb
+D:\Repository\Lab_Mnozhestva\Polinom_Library\bin\Debug\Polinom_Library.dll.config
+D:\Repository\Lab_Mnozhestva\Polinom_Library\bin\Debug\Polinom_Library.dll
+D:\Repository\Lab_Mnozhestva\Polinom_Library\bin\Debug\Polinom_Library.pdb
+D:\Repository\Lab_Mnozhestva\Polinom_Library\obj\Debug\Polinom_Library.csprojResolveAssemblyReference.cache
+D:\Repository\Lab_Mnozhestva\Polinom_Library\obj\Debug\Polinom_Library.dll
+D:\Repository\Lab_Mnozhestva\Polinom_Library\obj\Debug\Polinom_Library.pdb
