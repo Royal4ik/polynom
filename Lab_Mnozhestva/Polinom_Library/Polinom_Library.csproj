@@ -44,7 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="BisectionMethod.cs" />
+    <Compile Include="IFindroot.cs" />
+    <Compile Include="NewtonMethod.cs" />
+    <Compile Include="Polynom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

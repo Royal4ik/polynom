@@ -3,7 +3,6 @@
 namespace Lab_Mnozhestva
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
 
     using Polinom_Library;
 
@@ -79,7 +78,7 @@ namespace Lab_Mnozhestva
                             var polynom2 = InputPolynom();
                             Console.WriteLine("Сумма введенных полином равна:");
                             var result = polynom1 + polynom2;
-                            Console.WriteLine(result.ToString());
+                            Console.WriteLine(result);
                             break;
                         }
 
@@ -91,7 +90,7 @@ namespace Lab_Mnozhestva
                             var polynom2 = InputPolynom();
                             Console.WriteLine("Разность введенных полином равна:");
                             var result = polynom1 - polynom2;
-                            Console.WriteLine(result.ToString());
+                            Console.WriteLine(result);
                             break;               
                         }
 
@@ -103,7 +102,7 @@ namespace Lab_Mnozhestva
                             var multiplier = Convert.ToDouble(Console.ReadLine());
                             Console.WriteLine("Умножение числа на полином равно:");
                             var result = polynom * multiplier;
-                            Console.WriteLine(result.ToString());
+                            Console.WriteLine(result);
                             break;
                         }
 
@@ -115,7 +114,7 @@ namespace Lab_Mnozhestva
                             var polynom2 = InputPolynom();
                             Console.WriteLine("Произведение введенных полиномов равно:");
                             var result = polynom1 * polynom2;
-                            Console.WriteLine(result.ToString());
+                            Console.WriteLine(result);
                             break;
                         }
 
@@ -132,22 +131,25 @@ namespace Lab_Mnozhestva
                                 Console.WriteLine("2. Метод Ньютона");
                                 Console.WriteLine("0. Exit");
                                 variable = Convert.ToInt16(Console.ReadLine());
-                                Console.WriteLine("Введите полином");
-                                IFindroot polynom;
+                                IFindroot finder;
                                 switch (variable)
                                 {
                                     case 1:
                                         {
-                                            polynom = InputPolynom();
-                                            var result = polynom.FindRoot(start, end);
+                                            Console.WriteLine("Введите полином");
+                                            var polynom = InputPolynom();
+                                            finder = new BisectionMethod();
+                                            var result = finder.FindRoot(polynom, start, end);
                                             Console.WriteLine("Root is " + result);
                                             break;
                                         }
 
                                     case 2:
                                         {
-                                            polynom = new Polynom2();
-                                            var result = polynom.FindRoot(start, end);
+                                            Console.WriteLine("Введите полином");
+                                            var polynom = InputPolynom();
+                                            finder = new NewtonMethod();
+                                            var result = finder.FindRoot(polynom, start, end);
                                             Console.WriteLine("Root is " + result);
                                             break;
                                         }
