@@ -1,6 +1,0 @@
-D:\Lab_Mnozhestva\Lab_Mnozhestva\bin\Debug\Lab_Mnozhestva.exe.config
-D:\Lab_Mnozhestva\Lab_Mnozhestva\bin\Debug\Lab_Mnozhestva.exe
-D:\Lab_Mnozhestva\Lab_Mnozhestva\bin\Debug\Lab_Mnozhestva.pdb
-D:\Lab_Mnozhestva\Lab_Mnozhestva\obj\Debug\Lab_Mnozhestva.csprojResolveAssemblyReference.cache
-D:\Lab_Mnozhestva\Lab_Mnozhestva\obj\Debug\Lab_Mnozhestva.exe
-D:\Lab_Mnozhestva\Lab_Mnozhestva\obj\Debug\Lab_Mnozhestva.pdb
