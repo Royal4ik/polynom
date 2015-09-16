@@ -131,7 +131,7 @@ namespace Lab_Mnozhestva
                                 Console.WriteLine("2. Метод Ньютона");
                                 Console.WriteLine("0. Exit");
                                 variable = Convert.ToInt16(Console.ReadLine());
-                                IFindroot finder;
+                                IFindRoot finder;
                                 switch (variable)
                                 {
                                     case 1:
@@ -156,6 +156,13 @@ namespace Lab_Mnozhestva
                                 }
                             }
 
+                            break;
+                        }
+
+                    case 7:
+                        {
+                            var polynom = InputPolynom();
+                            Console.WriteLine("При первой " + polynom[1] + "  " + "При второй " + polynom[2]);
                             break;
                         }
                 }

@@ -4,57 +4,41 @@ namespace Polinom_Library
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-
     public class Polynom
     {
-        private readonly List<double> coefficient = new List<double>();
-
+        private readonly List<double> coefficients = new List<double>();
         // TODO: Зачем передавать степень, если она на прямую зависит от набора коэффициентов. Лучше сделать её свойством и вычислять диамически.
         public Polynom(IEnumerable<double> array)
         {
-            this.coefficient = array.ToList();
+            this.coefficients = array.ToList();
         }
 
         public int Degree
         {
-            get { return this.coefficient.Count; }
+            get
+            {
+                return this.coefficients.Count - 1;
+            }
         }
 
         public double this[int index]
         {
             get
             {
-                return this.coefficient[index];
+                return this.coefficients[index];
             }
 
             set
             {
-                this.coefficient[index] = value;
+                if ((index == this.coefficients.Count - 1) && (value == 0))
+                {
+                    this.coefficients.Remove(this.coefficients.Count);
+                }
+
+                this.coefficients[index] = value;
             }
         }
-        
-        public double FindRoot(double start, double end)
-        {
-            const double Eps = 0.000001;
-            var fstart = this.Calculate(start);
-            while (Math.Abs(start - end) > Eps)
-            {
-                var center = (start + end) / 2;
-                var fcenter = this.Calculate(center);
-                if (fstart * fcenter <= 0)
-                {
-                    end = center;
-                }
-                else
-                {
-                    start = center;
-                    fstart = fcenter;
-                }
-            }
-
-            return start;
-        }
-
+               
         // TODO: Так как мы обращаемся к этому методу в контексте многочлена, то есть (polynom.PrintPol()),
         // TODO: то логичнее назвать его просто Print, или даже как вариант, перегрузить метод ToString()
         // исправил
@@ -64,7 +48,7 @@ namespace Polinom_Library
             var sign = '+';
             for (var i = this.Degree - 1; i > 0; i--)
             {
-                var per = this.coefficient[i];
+                var per = this.coefficients[i];
                 if (per < 0)
                 {
                     per = -per;
@@ -81,16 +65,23 @@ namespace Polinom_Library
                     sign = ' ';
                 }
 
-                line.Append(sign + " " + per + "*x^" + i + " ");
+                line.Append(sign);
+                line.Append(" ");
+                line.Append(per);
+                line.Append("*x^");
+                line.Append(i);
+                line.Append(" ");
                 sign = '+';
             }
 
-            if (this.coefficient[0] < 0)
+            if (this.coefficients[0] < 0)
             {
-                sign = (char)45;
+                sign = '-';
             }
 
-            line.Append(sign + " " + Math.Abs(this.coefficient[0]));
+            line.Append(sign);
+            line.Append(" ");
+            line.Append(Math.Abs(this.coefficients[0]));
             return line.ToString();
         }
         
@@ -118,7 +109,7 @@ namespace Polinom_Library
             // исправил
             for (var i = 0; i < this.Degree; i++)
             {
-                results += this.coefficient[i] * Math.Pow(value, i);
+                results += this.coefficients[i] * Math.Pow(value, i);
             }
 
             return results;
@@ -135,15 +126,15 @@ namespace Polinom_Library
             {
                 if (i >= first.Degree)
                 {
-                    sum[i] = second.coefficient[i];
+                    sum[i] = second.coefficients[i];
                 }
                 else if (i >= second.Degree)
                 {
-                    sum[i] = first.coefficient[i];
+                    sum[i] = first.coefficients[i];
                 }
                 else
                 {
-                    sum[i] = first.coefficient[i] + second.coefficient[i];
+                    sum[i] = first.coefficients[i] + second.coefficients[i];
                 }
             }
 
@@ -170,7 +161,7 @@ namespace Polinom_Library
             else
             {
                 maxDegree = first.Degree;
-                while (Math.Abs(first.coefficient[maxDegree] - second.coefficient[maxDegree]) < 0.00001)
+                while (Math.Abs(first.coefficients[maxDegree] - second.coefficients[maxDegree]) < 0.00001)
                 {
                     maxDegree--;
                     if (maxDegree >= 0)
@@ -188,15 +179,15 @@ namespace Polinom_Library
             {
                 if (i >= first.Degree)
                 {
-                    diff[i] = -second.coefficient[i];
+                    diff[i] = -second.coefficients[i];
                 }
                 else if (i >= second.Degree)
                 {
-                    diff[i] = first.coefficient[i];
+                    diff[i] = first.coefficients[i];
                 }
                 else
                 {
-                    diff[i] = first.coefficient[i] - second.coefficient[i];
+                    diff[i] = first.coefficients[i] - second.coefficients[i];
                 }
             }
 
@@ -214,7 +205,7 @@ namespace Polinom_Library
             // для multiplicand отдельно считать индеск считать?
             for (var i = 0; i < first.Degree; i++)
             {
-                multiplicand[i] = multiplier * first.coefficient[i];
+                multiplicand[i] = multiplier * first.coefficients[i];
             }
 
             var multiply = new Polynom(multiplicand);
@@ -231,7 +222,7 @@ namespace Polinom_Library
             {
                 for (var j = 0; j < second.Degree; j++)
                 {
-                    compostion[j + i] += first.coefficient[i] * second.coefficient[j];
+                    compostion[j + i] += first.coefficients[i] * second.coefficients[j];
                 }
             }
 

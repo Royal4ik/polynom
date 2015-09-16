@@ -1,6 +1,6 @@
 ﻿namespace Polinom_Library
 {
-    public interface IFindroot
+    public interface IFindRoot
     {
         double FindRoot(Polynom polynom, double start, double end);
     }

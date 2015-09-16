@@ -1,6 +1,6 @@
 namespace Polinom_Library
 {
-    public class NewtonMethod : IFindroot
+    public class NewtonMethod : IFindRoot
     {
         public double FindRoot(Polynom polynom, double start, double end)
         {

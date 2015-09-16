@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class BisectionMethod : IFindroot
+    public class BisectionMethod : IFindRoot
     {
         public double FindRoot(Polynom polynom, double start, double end)
         {
