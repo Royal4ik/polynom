@@ -4,10 +4,11 @@ namespace Polinom_Library
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+
     public class Polynom
     {
-        private readonly List<double> coefficients = new List<double>();
-        // TODO: Зачем передавать степень, если она на прямую зависит от набора коэффициентов. Лучше сделать её свойством и вычислять диамически.
+        private readonly List<double> coefficients;
+
         public Polynom(IEnumerable<double> array)
         {
             this.coefficients = array.ToList();
@@ -39,9 +40,6 @@ namespace Polinom_Library
             }
         }
                
-        // TODO: Так как мы обращаемся к этому методу в контексте многочлена, то есть (polynom.PrintPol()),
-        // TODO: то логичнее назвать его просто Print, или даже как вариант, перегрузить метод ToString()
-        // исправил
         public override string ToString()
         {
             var line = new StringBuilder();
@@ -52,14 +50,9 @@ namespace Polinom_Library
                 if (per < 0)
                 {
                     per = -per;
-
-                    // TODO: это зачем вообще? У тебя знак всегда равен плюс. Убрать.
-                    // так то нет, знак может быть минус
                     sign = '-';
                 }
 
-                // TODO: Убрать использование методов консоли. Полином не должен от нее зависеть. Переписать, чтобы этот метод возвращал строку
-                // исправил
                 if (i == this.Degree - 1)
                 {
                     sign = ' ';
@@ -91,22 +84,16 @@ namespace Polinom_Library
             
             for (var i = 0; i < array.Length; i++)
             {
-                // TODO: зачем?
-                // исправил
                 values[i] = this.Calculate(array[i]);
             }
 
             return values;
         }
 
-        // TODO: Вместо использования корявых имен (чего вообще делать нельзя), логичнее использовать перегрузку метода Calculate для одиночного значения параметра.
-        // исправил
         public double Calculate(double value)
         {
             var results = 0.0;
 
-            // TODO: Если требуется индекс элемента, лучше использовать for, а не foreach (это единственный случай, когда метод for лучше)
-            // исправил
             for (var i = 0; i < this.Degree; i++)
             {
                 results += this.coefficients[i] * Math.Pow(value, i);
@@ -117,8 +104,7 @@ namespace Polinom_Library
       
         public static Polynom operator +(Polynom first, Polynom second)
         {
-            // TODO: Мы придерживаемся "верблюжьей" конвенции именования. maxDegree. Новое слово - большая буква
-            // исправил
+
             var maxDegree = first.Degree >= second.Degree ? first.Degree : second.Degree;
             
             var sum = new double[maxDegree];
@@ -149,7 +135,7 @@ namespace Polinom_Library
                 throw new ArgumentNullException("first");
             }
 
-            var maxDegree = 0;
+            int maxDegree;
             if (first.Degree > second.Degree)
             {
                 maxDegree = first.Degree;
