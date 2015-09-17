@@ -12,6 +12,10 @@ namespace Polinom_Library
         public Polynom(IEnumerable<double> array)
         {
             this.coefficients = array.ToList();
+            while ((this.Degree != 0) && (Math.Abs(this.coefficients[this.Degree]) < 0.000000001))
+            {
+                this.coefficients.RemoveAt(this.Degree);
+            }
         }
 
         public int Degree
@@ -31,7 +35,7 @@ namespace Polinom_Library
 
             set
             {
-                if ((index == this.coefficients.Count - 1) && (value == 0))
+                if ((index == this.coefficients.Count - 1) && (Math.Abs(value) < 0.0000000000000001))
                 {
                     this.coefficients.Remove(this.coefficients.Count);
                 }
@@ -44,7 +48,7 @@ namespace Polinom_Library
         {
             var line = new StringBuilder();
             var sign = '+';
-            for (var i = this.Degree - 1; i > 0; i--)
+            for (var i = this.Degree; i > 0; i--)
             {
                 var per = this.coefficients[i];
                 if (per < 0)
@@ -53,7 +57,7 @@ namespace Polinom_Library
                     sign = '-';
                 }
 
-                if (i == this.Degree - 1)
+                if (i == this.Degree)
                 {
                     sign = ' ';
                 }
@@ -78,15 +82,9 @@ namespace Polinom_Library
             return line.ToString();
         }
         
-        public double[] Calculate(double[] array)
+        public IEnumerable<double> Calculate(double[] array)
         {
-            var values = new double[array.Length];
-            
-            for (var i = 0; i < array.Length; i++)
-            {
-                values[i] = this.Calculate(array[i]);
-            }
-
+            var values = array.Select((d, i) => this.Calculate(array[i]));
             return values;
         }
 
@@ -94,27 +92,26 @@ namespace Polinom_Library
         {
             var results = 0.0;
 
-            for (var i = 0; i < this.Degree; i++)
+            for (var i = 0; i < this.Degree + 1; i++)
             {
                 results += this.coefficients[i] * Math.Pow(value, i);
             }
 
             return results;
         }
-      
+
         public static Polynom operator +(Polynom first, Polynom second)
         {
-
             var maxDegree = first.Degree >= second.Degree ? first.Degree : second.Degree;
-            
+            maxDegree++;
             var sum = new double[maxDegree];
             for (var i = 0; i < maxDegree; i++)
             {
-                if (i >= first.Degree)
+                if (i > first.Degree)
                 {
                     sum[i] = second.coefficients[i];
                 }
-                else if (i >= second.Degree)
+                else if (i > second.Degree)
                 {
                     sum[i] = first.coefficients[i];
                 }
@@ -135,16 +132,9 @@ namespace Polinom_Library
                 throw new ArgumentNullException("first");
             }
 
-            int maxDegree;
-            if (first.Degree > second.Degree)
-            {
-                maxDegree = first.Degree;
-            }
-            else if (first.Degree < second.Degree)
-            {
-                maxDegree = second.Degree;
-            }
-            else
+            var maxDegree = first.Degree >= second.Degree ? first.Degree : second.Degree;
+
+            /*else
             {
                 maxDegree = first.Degree;
                 while (Math.Abs(first.coefficients[maxDegree] - second.coefficients[maxDegree]) < 0.00001)
@@ -158,16 +148,16 @@ namespace Polinom_Library
                     maxDegree = 0;
                     break;
                 }
-            }
+            }*/
 
-            var diff = new double[maxDegree];
-            for (var i = 0; i < maxDegree; i++)
+            var diff = new double[maxDegree + 1];
+            for (var i = 0; i < maxDegree + 1; i++)
             {
-                if (i >= first.Degree)
+                if (i > first.Degree)
                 {
                     diff[i] = -second.coefficients[i];
                 }
-                else if (i >= second.Degree)
+                else if (i > second.Degree)
                 {
                     diff[i] = first.coefficients[i];
                 }
@@ -183,30 +173,19 @@ namespace Polinom_Library
 
         public static Polynom operator *(Polynom first, double multiplier)
         {
-            // TODO: почему difference?
-            // исправил
-            var multiplicand = new double[first.Degree];
-
-            // TODO: ¬место цикла for  логичнее использовать foreach
-            // дл€ multiplicand отдельно считать индеск считать?
-            for (var i = 0; i < first.Degree; i++)
-            {
-                multiplicand[i] = multiplier * first.coefficients[i];
-            }
-
-            var multiply = new Polynom(multiplicand);
-            return multiply;
+            var multiplicand = first.coefficients.Select(i => multiplier * i).ToList();
+            return new Polynom(multiplicand);
         }
 
 
         public static Polynom operator *(Polynom first, Polynom second)
         {
             var maxDegree = first.Degree + second.Degree;
-            var compostion = new double[maxDegree - 1];
+            var compostion = new double[maxDegree + 1];
 
-            for (var i = 0; i < first.Degree; i++)
+            for (var i = 0; i < first.Degree + 1; i++)
             {
-                for (var j = 0; j < second.Degree; j++)
+                for (var j = 0; j < second.Degree + 1; j++)
                 {
                     compostion[j + i] += first.coefficients[i] * second.coefficients[j];
                 }

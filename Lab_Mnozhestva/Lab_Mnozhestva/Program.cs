@@ -1,6 +1,4 @@
-﻿// TODO: Нэймспейс должен соответствовать имени проекта
-// TODO: Удалить нахрен все атрибуты. Все, что ты для стайлкопа наставил.
-namespace Lab_Mnozhestva
+﻿namespace Lab_Mnozhestva
 {
     using System;
 
@@ -62,9 +60,9 @@ namespace Lab_Mnozhestva
                             Console.WriteLine();
                             Console.WriteLine("Получившиеся значения");
                             var values = polynom.Calculate(arguments);
-                            for (var i = 0; i < number; i++)
+                            foreach (var value in values)
                             {
-                                Console.Write(values[i] + " ");
+                                Console.WriteLine(value + " ");
                             }
 
                             break;
@@ -156,13 +154,6 @@ namespace Lab_Mnozhestva
                                 }
                             }
 
-                            break;
-                        }
-
-                    case 7:
-                        {
-                            var polynom = InputPolynom();
-                            Console.WriteLine("При первой " + polynom[1] + "  " + "При второй " + polynom[2]);
                             break;
                         }
                 }
