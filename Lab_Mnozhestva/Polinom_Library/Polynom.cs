@@ -84,7 +84,7 @@ namespace Polinom_Library
         
         public IEnumerable<double> Calculate(double[] array)
         {
-            var values = array.Select((d, i) => this.Calculate(array[i]));
+            var values = array.Select(this.Calculate);
             return values;
         }
 
